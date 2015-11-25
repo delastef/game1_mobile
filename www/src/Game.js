@@ -8,6 +8,13 @@ BasicGame = {
 BasicGame.Game = function (game) {
 };
 
+var accelerometer = {
+    x: null,
+    y: null,
+    z: null
+};
+
+
 // set Game function prototype
 BasicGame.Game.prototype = {
 
@@ -46,6 +53,15 @@ BasicGame.Game.prototype = {
         // Re-calculate scale mode and update screen size. This only applies if
         // ScaleMode is not set to RESIZE.
         this.scale.refresh();
+
+        if ( navigator.accelerometer ) {
+            navigator.accelerometer.watchAcceleration(function(acc) {
+                accelerometer.x = acc.x;
+                accelerometer.y = acc.y;
+                accelerometer.z = acc.z;
+            }, null, null);
+        }
+
 
     },
 
@@ -103,6 +119,7 @@ BasicGame.Game.prototype = {
 		//  Player physics properties. Give the little guy a slight bounce.
 		player.body.bounce.y              = 0.2;
 		player.body.gravity.y             = 300;
+        player.body.speed                 = 1;
 		player.body.collideWorldBounds    = true; // obstacle du canvas (pas nesecaire car par la suite les platformes feront obstacle)
 
 		//  Position de l'image du player quand on le déplace :
@@ -117,6 +134,58 @@ BasicGame.Game.prototype = {
         //  permettre au joueur + stars d'entrer en collision avec les obstacle :
 	    this.physics.arcade.collide(player, platforms);
 	    //this.physics.arcade.collide(stars, platforms);
+
+
+
+        ////////////////////////////// DEPLACEMENT DU JOUEUR : //////////////////////////////
+
+        //  Initialise la vitesse du joueur (stop) :
+        player.body.velocity.x = 0;
+
+        // GESTION DEPLACEMENT DROITE GAUCHE :
+        function moveDude(acceleration) {
+            player.body.velocity.x += acceleration.y * 40; // comme on est en landscape, c'est y
+        }
+        navigator.accelerometer.getCurrentAcceleration(moveDude);
+
+        // GESTION DEPLACEMENT SAUT :
+        $('body').bind('touchstart', function(e) {
+            e.preventDefault();
+            if ( player.body.touching.down ) {
+    			player.body.velocity.y = -300;
+    		}
+        });
+
+
+
+
+
+		//cursors = this.input.keyboard.createCursorKeys();
+
+        //player.body.velocity.x -= accelerometer.x * 1.2;
+        //player.body.velocity.y += accelerometer.y * 1.2;
+
+		// //GESTION DEPLACEMENT DOITE - GAUCHE :
+		// if (cursors.left.isDown) {
+		// 	player.body.velocity.x = -150;
+		// 	player.animations.play('left');
+		// }
+        //
+		// else if (cursors.right.isDown) {
+		// 	player.body.velocity.x = 150;
+		// 	player.animations.play('right');
+		// }
+        //
+		// else {
+		// 	player.animations.stop();
+		// 	player.frame = 4;
+		// }
+
+		// GESTION DEPLACEMENT SAUT :
+		// if (cursors.up.isDown && player.body.touching.down) { // "&& player.body.touching.down" permet de limiter la hauteur du saut si on reste appuyé
+		// 	player.body.velocity.y = -350;
+		// }
+
 
     },
 

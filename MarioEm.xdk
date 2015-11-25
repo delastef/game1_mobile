@@ -5,7 +5,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.jsapp",
       "src": "jsapp/template-phaser-landscape/sample.zip",
       "projectGuid": "7065496a-8f4c-4488-8270-eed67b0993c8",
-      "lastModifiedDate": 1448453479804,
+      "lastModifiedDate": 1448474850937,
       "creationDate": 1448453379435
     },
     "sourceDirectory": "www",
@@ -83,6 +83,24 @@
         "name": "Splashscreen",
         "description": "Cordova Splashscreen Plugin",
         "checksum": "170efb68"
+      },
+      {
+        "id": "cordova-plugin-device-motion",
+        "name": "Device Motion",
+        "version": "1.1.1",
+        "originType": "cordova.io",
+        "origin": "cordova-plugin-device-motion",
+        "gitref": "",
+        "paramvals": {},
+        "sourceLocation": "plugins/cordova-plugin-device-motion",
+        "selectedState": "Included",
+        "checksum": "132d4c05",
+        "dependsOn": [],
+        "topLevel": true,
+        "permissions": {},
+        "description": "Cordova Device Motion Plugin",
+        "data": {},
+        "dependedBy": []
       }
     ],
     "buildConfigurations": {

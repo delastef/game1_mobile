@@ -6,6 +6,7 @@
     "projectDirectories": {},
     "currentService": {
       "service": "RSS"
-    }
+    },
+    "initialAutoPluginCount": 0
   }
 }
