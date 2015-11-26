@@ -79,6 +79,8 @@ BasicGame.Game.prototype = {
         this.load.image('sky', 'asset/sky.png');
         this.load.image('ground', 'asset/platform.png');
         this.load.image('star', 'asset/star.png');
+        this.load.image('heart', 'asset/heart.png');
+        this.load.image('clouds', 'asset/clouds.png');
         this.load.spritesheet('player', 'asset/dude.png', 32, 48);
     },
 
@@ -104,13 +106,13 @@ BasicGame.Game.prototype = {
 	    ground.body.immovable = true; // obstacle
 
 	    //  LES REBORDS (ledge) :
-	    var ledge1 = platforms.create(400, bottom - 100, 'ground');
+	    var ledge1 = platforms.create(400, bottom - 100, 'clouds');
 	    ledge1.body.immovable = true; // obstacle
 
-	    var ledge2 = platforms.create(-150, bottom - 200, 'ground');
+	    var ledge2 = platforms.create(-150, bottom - 200, 'clouds');
 	    ledge2.body.immovable = true; // obstacle
 
-	    var ledge3 = platforms.create(150, bottom - 300, 'ground');
+	    var ledge3 = platforms.create(150, bottom - 300, 'clouds');
 	    ledge3.body.immovable = true; // obstacle
 
 
