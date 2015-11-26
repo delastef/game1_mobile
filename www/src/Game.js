@@ -13,6 +13,9 @@ var accelerometer = {
     y: null,
     z: null
 };
+var life = 20;
+var lifeText;
+var lifeTextWin;
 
 
 // set Game function prototype
@@ -61,6 +64,8 @@ BasicGame.Game.prototype = {
                 accelerometer.z = acc.z;
             }, null, null);
         }
+
+
 
 
     },
@@ -126,6 +131,27 @@ BasicGame.Game.prototype = {
 		player.animations.add('left', [0, 1, 2, 3], 10, true);
 		player.animations.add('right', [5, 6, 7, 8], 10, true);
 
+
+
+        ////////////////////////////// LES ETOILES : //////////////////////////////
+        stars = this.add.group();
+        stars.enableBody = true;
+
+        //  On creer 12 étoiles :
+        for (var i = 0; i < 12; i++) {
+            //  Créer une étoile a l'intérieur du groupe étoile (on ne passe PAS par un sprite):
+            var star = stars.create(i * 70, 0, 'star');
+
+            star.body.gravity.y = 40;								//  Leur gravité
+            star.body.bounce.y 	= 0.5 + Math.random() * 0.2;		// leur rebond en valeur aléatoire
+            star.body.rotation 	= 5;								// add
+        }
+
+
+        ////////////////////////////// NIVEAU DE VIE : //////////////////////////////
+		lifeText 		= this.add.text(16, 16, 'vie: 20', { fontSize: '32px', fill: '#000' });
+		lifeTextWin 	= this.add.text(350, 16, '', { fontSize: '40px', fill: '#fff' });
+
     },
 
 
@@ -133,18 +159,31 @@ BasicGame.Game.prototype = {
     update: function() {
         //  permettre au joueur + stars d'entrer en collision avec les obstacle :
 	    this.physics.arcade.collide(player, platforms);
-	    //this.physics.arcade.collide(stars, platforms);
+	    this.physics.arcade.collide(stars, platforms);
 
 
 
         ////////////////////////////// DEPLACEMENT DU JOUEUR : //////////////////////////////
+        //function onSuccess(acceleration) { console.log('Acceleration Y: ' + acceleration.y + '\n'); }
+        //navigator.accelerometer.getCurrentAcceleration(onSuccess);
 
-        //  Initialise la vitesse du joueur (stop) :
-        player.body.velocity.x = 0;
+
+        player.body.velocity.x = 0; //  Initialise la vitesse du joueur (stop)
 
         // GESTION DEPLACEMENT DROITE GAUCHE :
         function moveDude(acceleration) {
-            player.body.velocity.x += acceleration.y * 40; // comme on est en landscape, c'est y
+            // player.body.velocity.x += acceleration.y * 40; // comme on est en landscape, c'est y
+
+            if ( acceleration.y < -1 ) {
+                player.body.velocity.x = -650;
+                player.animations.play('left');
+            } else if ( acceleration.y > 1 ) {
+                player.body.velocity.x = 650;
+                player.animations.play('right');
+            } else {
+                player.animations.stop();
+                player.frame = 4;
+            }
         }
         navigator.accelerometer.getCurrentAcceleration(moveDude);
 
@@ -158,33 +197,21 @@ BasicGame.Game.prototype = {
 
 
 
+        ////////////////////////////// Supprime les étoiles si player les touche //////////////////////////////
+		function collectStar (player, star) {
+		    star.kill();
 
+			// on ajouter de la vie :
+			life += 10;
+		    lifeText.text = 'vie : ' + life;
 
-		//cursors = this.input.keyboard.createCursorKeys();
+			// quand on gagne :
+			if ( life >= 120 ) {
+				lifeTextWin.text = 'Gagné !!';
+			}
+		}
+		this.physics.arcade.overlap(player, stars, collectStar, null, this);
 
-        //player.body.velocity.x -= accelerometer.x * 1.2;
-        //player.body.velocity.y += accelerometer.y * 1.2;
-
-		// //GESTION DEPLACEMENT DOITE - GAUCHE :
-		// if (cursors.left.isDown) {
-		// 	player.body.velocity.x = -150;
-		// 	player.animations.play('left');
-		// }
-        //
-		// else if (cursors.right.isDown) {
-		// 	player.body.velocity.x = 150;
-		// 	player.animations.play('right');
-		// }
-        //
-		// else {
-		// 	player.animations.stop();
-		// 	player.frame = 4;
-		// }
-
-		// GESTION DEPLACEMENT SAUT :
-		// if (cursors.up.isDown && player.body.touching.down) { // "&& player.body.touching.down" permet de limiter la hauteur du saut si on reste appuyé
-		// 	player.body.velocity.y = -350;
-		// }
 
 
     },
